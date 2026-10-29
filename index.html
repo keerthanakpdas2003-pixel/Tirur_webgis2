@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tirur Muncipality WebGIS</title>
+
+    <meta name="description"
+          content="A WebGIS project presenting the administrative and geographical features of Tirur Muncipality, Kerala.">
+
+    <!-- Leaflet CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7f5;
+            color: #222;
+            line-height: 1.7;
+        } 
+
+
+        .page {
+            width: 92%;
+            max-width: 1100px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .cover-page {
+            text-align: center;
+            padding: 45px 30px;
+            border-bottom: 3px solid #2d6a4f;
+            margin-bottom: 35px;
+        }
+
+        h1, h2, h3 {
+            color: #2d6a4f;
+        }
+
+        h1 {
+            letter-spacing: 1px;
+        }
+
+        .government-logo {
+            display: block;
+            max-width: 220px;
+            max-height: 220px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            margin: 25px auto;
+        } 
+
+
+        .intro {
+            max-width: 850px;
+            margin: 25px auto 0;
+            text-align: justify;
+        }
+
+        .project-header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #d8e7dc;
+            margin-bottom: 25px;
+        }
+
+        .subtitle {
+            color: #527565;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .municipality-image {
+            display: block;
+            width: 100%;
+            max-width: 650px;
+            max-height: 400px;
+            object-fit: contain;
+            margin: 25px auto;
+            border-radius: 8px;
+        }
+
+        .description {
+            text-align: justify;
+            margin: 25px 0;
+        }
+
+        section {
+            margin: 35px 0;
+        }
+
+        .location-map {
+            display: block;
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        /* Interactive Leaflet map */
+        #map {
+            width: 100%;
+            height: 450px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #eaf0eb;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f5f9f6;
+            border-left: 5px solid #2d6a4f;
+            padding: 22px;
+            border-radius: 6px;
+        }
+
+        .info-card h3 {
+            margin-top: 0;
+        }
+
+        .info-card ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        .project-link {
+            display: inline-block;
+            color: #2d6a4f;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #2d6a4f;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .contact {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #2d6a4f;
+        }
+
+        .contact h3 {
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .contact p {
+            margin: 4px 0;
+        }
+
+        @media (max-width: 650px) {
+            .page {
+                width: 96%;
+                padding: 20px;
+                margin: 12px auto;
+            }
+
+            .cover-page {
+                padding: 25px 10px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #map {
+                height: 320px;
+            }
+        }
+
+        /* Print layout */
+        @media print {
+            body {
+                background: #fff;
+            }
+
+            .page {
+                width: 100%;
+                max-width: none;
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .cover-page {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PAGE 1: GOVERNMENT OF KERALA -->
+    <div class="page cover-page">
+
+        <h1>GOVERNMENT OF KERALA</h1>
+
+        <img
+            src="C:\Users\USER\Documents\keerthana\WEBGIS\GOVERNMENT OF KERALA LOGO.jpg"
+            alt="Government of Kerala emblem"
+            class="government-logo"
+        >
+
+        <p class="intro"
+        A municipality is an urban local self-government institution responsible for the administration and development of urban areas. It plays an important role in providing essential services such as water supply, sanitation, waste management, road maintenance, public health, and urban planning.
+The selected municipality serves as the study area for this WebGIS project. The study focuses on understanding the geographical characteristics, spatial distribution of important features, land use patterns, road networks, population distribution, and public facilities within the municipal area.
+WebGIS (Web-based Geographic Information System) is a technology that enables geographical information to be stored, analysed, visualised, and shared through the internet. In this…
+        </p>
+
+    </div>
+
+    <!-- PAGE 2: WEBGIS PROJECT -->
+    <main class="page">
+
+        <header class="project-header">
+            <p class="subtitle">
+                WebGIS — Geography and Spatial Analysis
+            </p>
+
+            <h1>Tirur Muncipality</h1>
+
+            <h2>Geographical Information System</h2>
+        </header>
+
+        <!-- Panchayat / Office Image -->
+        <section>
+            <h2>About the Study Area</h2>
+
+            <img
+                src="C:\Users\USER\Documents\keerthana\WEBGIS\Thirur office.webp"
+                alt="Local government office"
+                class="municipality-image"
+            >
+
+            <p class="description">
+                Tirur Muncipality is located in Malappuram district, Kerala This WebGIS
+                project presents geographical and administrative
+                information about the study area, including its
+                location, boundaries, wards, roads and other
+                important spatial features.
+            </p>
+        </section>
+
+        <!-- Location Map -->
+        <section>
+            <h2>Location Map</h2>
+
+            <p>
+                The location map provides a geographical overview
+                of the study area within its regional setting.
+            </p>
+
+            <img
+                src="C:\Users\USER\Documents\keerthana\WEBGIS\Location map.png"
+                alt="Location map.png"
+                class="location-map"
+            >
+        </section>
+
+        <!-- Interactive Map -->
+        <section>
+            <h2>Interactive GIS Map</h2>
+
+            <p>
+                Explore geographical features using the interactive
+                map below. Additional layers and spatial information
+                can be integrated into the map using Leaflet.
+            </p>
+
+            <div
+                id="map"
+                role="application"
+                aria-label="Interactive geographical map"
+            ></div>
+        </section>
+
+        <!-- Geographical Information -->
+        <section>
+            <h2>Geographical Information</h2>
+
+            <p>
+                The following details describe the administrative
+                and geographical setting of the study area.
+            </p>
+
+            <div class="info-grid">
+
+                <div class="info-card">
+                    <h3>Administrative Details</h3>
+
+                    <ul>
+                        <li>
+                            <strong>District:</strong>
+                           Malappuram
+                        </li>
+
+                        <li>
+                            <strong>Taluk:</strong>
+                            Thrikkandiyur
+                        </li>
+
+                        <li>
+                            <strong>Block:</strong>
+                            Tirur
+                        </li>
+
+                        <li>
+                            <strong>State:</strong>
+                            Kerala
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>Geographic Setting</h3>
+
+                    <ul>
+                        <li>
+                            <strong>Physiography:</strong>
+                            Midland / undulating terrain
+                        </li>
+
+                        <li>
+                            <strong>Drainage:</strong>
+                           Tirur River Basin
+                        </li>
+
+                        <li>
+                            <strong>Surrounding Areas:</strong>
+                            Athavanad, Thirunavaya
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Project Details -->
+        <section>
+            <h2>Project Information</h2>
+
+            <p>
+                <strong>Programme:</strong>
+                MSc Geography and Disaster Management
+            </p>
+
+            <p>
+                <strong>Project:</strong>
+                WebGIS for Geographical and Administrative Analysis
+            </p>
+
+            <p>
+                <strong>Date:</strong> 09 October 2026
+            </p>
+
+            <p>
+                <strong>Reference Website:</strong>
+                <a
+                    href="https://lsgkerala.gov.in"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="project-link"
+                >
+                    Local Self Government Department, Kerala
+                </a>
+            </p>
+        </section>
+
+        <!-- Contact -->
+        <div class="contact">
+            <h3>CONTACT</h3>
+
+            <p><strong>Keerthana K P</strong></p>
+
+            <p>
+                Email:
+                <a href="mailto:keerthanakpdas2003@gmail.com">
+                    keerthanakpdas2003@gmail.com
+                </a>
+            </p>
+        </div>
+
+        <footer>
+            MSc Geography and Disaster Management — WebGIS Project
+        </footer>
+
+    </main>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>
